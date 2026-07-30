@@ -26,11 +26,10 @@ public class WaterTariffServiceImpl implements WaterTariffService {
         Community community = communityRepository.findById(request.getCommunityId())
                 .orElseThrow(() -> new RuntimeException("Community not found."));
 
-        // Deactivate previous active tariff
         waterTariffRepository.findByCommunityIdAndActiveTrue(request.getCommunityId())
-                .ifPresent(tariff -> {
-                    tariff.setActive(false);
-                    waterTariffRepository.save(tariff);
+                .ifPresent(existing -> {
+                    existing.setActive(false);
+                    waterTariffRepository.save(existing);
                 });
 
         WaterTariff tariff = WaterTariffMapper.toEntity(request, community);
@@ -74,16 +73,24 @@ public class WaterTariffServiceImpl implements WaterTariffService {
         WaterTariff tariff = waterTariffRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Tariff not found."));
 
+        Community community = communityRepository.findById(request.getCommunityId())
+                .orElseThrow(() -> new RuntimeException("Community not found."));
+
+        tariff.setCommunity(community);
         tariff.setPricePerLitre(request.getPricePerLitre());
         tariff.setEffectiveFrom(request.getEffectiveFrom());
 
-        return WaterTariffMapper.toResponse(
-                waterTariffRepository.save(tariff));
+        WaterTariff updated = waterTariffRepository.save(tariff);
+
+        return WaterTariffMapper.toResponse(updated);
     }
 
     @Override
     public void deleteTariff(Long id) {
 
-        waterTariffRepository.deleteById(id);
+        WaterTariff tariff = waterTariffRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tariff not found."));
+
+        waterTariffRepository.delete(tariff);
     }
 }

@@ -13,6 +13,8 @@ import com.water.backend.repository.UserRepository;
 import com.water.backend.security.JwtService;
 import com.water.backend.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,8 +42,47 @@ public class UserServiceImpl implements UserService {
         // Convert DTO to Entity
         User user = UserMapper.toEntity(request);
 
-        // Set default role
-        user.setRole(UserRole.CUSTOMER);
+        // 🔐 GET CURRENT USER ROLE (if logged in)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        String currentRole = null;
+        if (authentication != null && authentication.isAuthenticated()
+                && authentication.getAuthorities() != null
+                && !authentication.getAuthorities().isEmpty()) {
+
+            currentRole = authentication.getAuthorities().iterator().next().getAuthority();
+        }
+
+        // 🔐 ROLE ASSIGNMENT LOGIC
+        if (request.getRole() == null) {
+
+            // Default role
+            user.setRole(UserRole.RESIDENT);
+
+        } else {
+
+            // 🚫 BLOCK SUPERADMIN CREATION
+            if (request.getRole() == UserRole.SUPERADMIN) {
+                throw new RuntimeException("Cannot assign SUPERADMIN role");
+            }
+
+            // 🚫 ONLY SUPERADMIN CAN CREATE COMMUNITY_ADMIN
+            if (request.getRole() == UserRole.COMMUNITY_ADMIN) {
+
+                if (currentRole == null || !currentRole.equals("SUPERADMIN")) {
+                    throw new RuntimeException("Only SUPERADMIN can create COMMUNITY_ADMIN");
+                }
+            }
+
+            user.setRole(request.getRole());
+        }
+
+        // ✅ APPROVAL LOGIC
+        if (user.getRole() == UserRole.COMMUNITY_ADMIN) {
+            user.setStatus(User.ApprovalStatus.PENDING);
+        } else {
+            user.setStatus(User.ApprovalStatus.APPROVED);
+        }
 
         // Encrypt password
         user.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -49,7 +90,6 @@ public class UserServiceImpl implements UserService {
         // Save user
         User savedUser = userRepository.save(user);
 
-        // Return response
         return UserMapper.toResponse(savedUser);
     }
 
@@ -64,12 +104,57 @@ public class UserServiceImpl implements UserService {
             throw new InvalidCredentialsException("Invalid email or password.");
         }
 
-        String token = jwtService.generateToken(user.getEmail());
+        // 🚫 BLOCK LOGIN IF NOT APPROVED
+        if (user.getStatus() == User.ApprovalStatus.PENDING) {
+            throw new RuntimeException("Account is pending approval");
+        }
+
+        if (user.getStatus() == User.ApprovalStatus.REJECTED) {
+            throw new RuntimeException("Account has been rejected");
+        }
+
+        if (user.getStatus() == User.ApprovalStatus.SUSPENDED) {
+            throw new RuntimeException("Account is suspended");
+        }
+
+        String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
 
         return LoginResponse.builder()
                 .token(token)
                 .role(user.getRole().name())
                 .fullName(user.getFullName())
                 .build();
+    }
+    @Override
+    public UserResponse approveUser(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setStatus(User.ApprovalStatus.APPROVED);
+
+        User savedUser = userRepository.save(user);
+
+        return UserMapper.toResponse(savedUser);
+    }
+    @Override
+    public UserResponse rejectUser(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setStatus(User.ApprovalStatus.REJECTED);
+
+        return UserMapper.toResponse(userRepository.save(user));
+    }
+    @Override
+    public UserResponse suspendUser(Long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        user.setStatus(User.ApprovalStatus.SUSPENDED);
+
+        return UserMapper.toResponse(userRepository.save(user));
     }
 }

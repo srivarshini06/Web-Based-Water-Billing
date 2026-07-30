@@ -26,6 +26,9 @@ public class BillServiceImpl implements BillService {
 
     @Override
     public BillResponse generateBill(BillRequest request) {
+        if (billRepository.existsByWaterReadingId(request.getWaterReadingId())) {
+            throw new IllegalArgumentException("Bill has already been generated for this water reading.");
+        }
 
         WaterReading reading = waterReadingRepository.findById(request.getWaterReadingId())
                 .orElseThrow(() -> new IllegalArgumentException("Water reading not found"));
@@ -82,10 +85,9 @@ public class BillServiceImpl implements BillService {
         Bill bill = billRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Bill not found"));
 
-        if (bill.isPaid()) {
-            throw new IllegalArgumentException("Bill is already paid");
+        if (Boolean.TRUE.equals(bill.getPaid())) {
+            throw new IllegalStateException("Bill is already paid");
         }
-
         bill.setPaid(true);
         bill.setPaidDate(LocalDate.now());
 

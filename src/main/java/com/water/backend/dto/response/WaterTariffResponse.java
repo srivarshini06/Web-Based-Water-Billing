@@ -15,6 +15,8 @@ public class WaterTariffResponse {
 
     private Long communityId;
 
+    private String communityName;
+
     private Double pricePerLitre;
 
     private LocalDate effectiveFrom;

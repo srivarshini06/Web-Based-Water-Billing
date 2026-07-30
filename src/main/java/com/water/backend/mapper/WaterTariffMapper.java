@@ -24,6 +24,7 @@ public class WaterTariffMapper {
         return WaterTariffResponse.builder()
                 .id(tariff.getId())
                 .communityId(tariff.getCommunity().getId())
+                .communityName(tariff.getCommunity().getCommunityName())
                 .pricePerLitre(tariff.getPricePerLitre())
                 .effectiveFrom(tariff.getEffectiveFrom())
                 .active(tariff.getActive())

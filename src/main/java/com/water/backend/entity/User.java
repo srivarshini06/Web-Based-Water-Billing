@@ -1,5 +1,6 @@
 package com.water.backend.entity;
 
+import com.water.backend.dto.response.UserResponse;
 import com.water.backend.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -32,4 +33,14 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
+
+
+    @Enumerated(EnumType.STRING)
+    private ApprovalStatus status;
+    public enum ApprovalStatus {
+        PENDING,
+        APPROVED,
+        REJECTED,
+        SUSPENDED
+    }
 }

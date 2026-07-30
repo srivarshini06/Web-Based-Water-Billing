@@ -10,4 +10,7 @@ public interface UserService {
     UserResponse register(UserRequest request);
 
     LoginResponse login(LoginRequest request);
+    UserResponse approveUser(Long id);
+    UserResponse rejectUser(Long id);
+    UserResponse suspendUser(Long id);
 }

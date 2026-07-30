@@ -15,9 +15,13 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     List<Bill> findByResident(Resident resident);
 
     /**
-     * Checks whether a bill has already been generated
-     * for the resident in the given billing month.
+     * Checks whether a resident already has a bill for the given month.
      */
     boolean existsByResidentAndBillMonth(Resident resident, LocalDate billMonth);
 
+    /**
+     * Checks whether a bill has already been generated
+     * for a particular water reading.
+     */
+    boolean existsByWaterReadingId(Long waterReadingId);
 }
