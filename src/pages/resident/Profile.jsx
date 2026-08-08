@@ -12,202 +12,231 @@ const Profile = () => {
         >
             <div className="space-y-8">
 
+                {/* Header */}
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-800">
+                    <h1 className="text-4xl font-bold text-gray-900">
                         My Profile
                     </h1>
 
                     <p className="text-gray-500 mt-2">
-                        View your personal and property information.
+                        View and manage your personal information.
                     </p>
                 </div>
 
-                {/* Profile Header */}
+                {/* Profile Overview */}
+                <div className="bg-white rounded-xl shadow p-6">
 
-                <div className="bg-white rounded-xl shadow-md p-8 flex flex-col md:flex-row items-center gap-8">
+                    <div className="flex flex-col md:flex-row md:items-center gap-6">
 
-                    <div className="w-28 h-28 rounded-full bg-teal-600 text-white flex items-center justify-center text-5xl font-bold">
-                        P
+                        {/* Avatar */}
+                        <div className="w-24 h-24 rounded-full bg-teal-100 text-teal-700 flex items-center justify-center text-3xl font-bold">
+                            P
+                        </div>
+
+                        {/* Basic Info */}
+                        <div className="flex-1">
+                            <h2 className="text-2xl font-bold text-gray-900">
+                                Priya Nair
+                            </h2>
+
+                            <p className="text-gray-500 mt-1">
+                                Resident
+                            </p>
+
+                            <p className="text-gray-500 text-sm mt-2">
+                                Member since January 2025
+                            </p>
+                        </div>
+
+                        <button
+                            className="border border-teal-600 text-teal-600 hover:bg-teal-50 px-5 py-2.5 rounded-lg font-medium"
+                        >
+                            Edit Profile
+                        </button>
+
                     </div>
-
-                    <div className="flex-1">
-
-                        <h2 className="text-3xl font-bold">
-                            Priya Nair
-                        </h2>
-
-                        <p className="text-gray-500 mt-2">
-                            Resident
-                        </p>
-
-                        <p className="mt-2">
-                            priya@aquaflow.com
-                        </p>
-
-                    </div>
-
-                    <button className="bg-teal-600 text-white px-6 py-3 rounded-lg hover:bg-teal-700">
-                        Edit Profile
-                    </button>
 
                 </div>
 
                 {/* Personal Information */}
+                <div className="bg-white rounded-xl shadow">
 
-                <div className="grid lg:grid-cols-2 gap-6">
-
-                    <div className="bg-white rounded-xl shadow-md p-6">
-
-                        <h2 className="text-xl font-semibold mb-6">
-                            Personal Details
+                    <div className="p-6 border-b">
+                        <h2 className="text-xl font-semibold text-gray-900">
+                            Personal Information
                         </h2>
 
-                        <div className="space-y-5">
-
-                            <div>
-                                <p className="text-gray-500 text-sm">
-                                    Full Name
-                                </p>
-
-                                <h3 className="font-semibold">
-                                    Priya Nair
-                                </h3>
-                            </div>
-
-                            <div>
-                                <p className="text-gray-500 text-sm">
-                                    Email Address
-                                </p>
-
-                                <h3 className="font-semibold">
-                                    priya@aquaflow.com
-                                </h3>
-                            </div>
-
-                            <div>
-                                <p className="text-gray-500 text-sm">
-                                    Phone Number
-                                </p>
-
-                                <h3 className="font-semibold">
-                                    +91 98765 43210
-                                </h3>
-                            </div>
-
-                            <div>
-                                <p className="text-gray-500 text-sm">
-                                    Resident Since
-                                </p>
-
-                                <h3 className="font-semibold">
-                                    January 2024
-                                </h3>
-                            </div>
-
-                        </div>
-
+                        <p className="text-sm text-gray-500 mt-1">
+                            Your registered personal details.
+                        </p>
                     </div>
 
-                    {/* Property Details */}
+                    <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                    <div className="bg-white rounded-xl shadow-md p-6">
+                        <div>
+                            <p className="text-sm text-gray-500">
+                                Full Name
+                            </p>
 
-                        <h2 className="text-xl font-semibold mb-6">
-                            Property Details
-                        </h2>
+                            <p className="font-medium text-gray-900 mt-1">
+                                Priya Nair
+                            </p>
+                        </div>
 
-                        <div className="space-y-5">
+                        <div>
+                            <p className="text-sm text-gray-500">
+                                Email Address
+                            </p>
 
-                            <div>
-                                <p className="text-gray-500 text-sm">
-                                    Community
-                                </p>
+                            <p className="font-medium text-gray-900 mt-1">
+                                priya@aquaflow.com
+                            </p>
+                        </div>
 
-                                <h3 className="font-semibold">
-                                    Palm Residency
-                                </h3>
-                            </div>
+                        <div>
+                            <p className="text-sm text-gray-500">
+                                Phone Number
+                            </p>
 
-                            <div>
-                                <p className="text-gray-500 text-sm">
-                                    Apartment
-                                </p>
+                            <p className="font-medium text-gray-900 mt-1">
+                                +91 98765 43210
+                            </p>
+                        </div>
 
-                                <h3 className="font-semibold">
-                                    Block A - 204
-                                </h3>
-                            </div>
+                        <div>
+                            <p className="text-sm text-gray-500">
+                                Date of Birth
+                            </p>
 
-                            <div>
-                                <p className="text-gray-500 text-sm">
-                                    Meter ID
-                                </p>
-
-                                <h3 className="font-semibold">
-                                    MTR-88213
-                                </h3>
-                            </div>
-
-                            <div>
-                                <p className="text-gray-500 text-sm">
-                                    Occupancy
-                                </p>
-
-                                <h3 className="font-semibold">
-                                    4 Members
-                                </h3>
-                            </div>
-
+                            <p className="font-medium text-gray-900 mt-1">
+                                12 March 1999
+                            </p>
                         </div>
 
                     </div>
 
                 </div>
 
-                {/* Emergency Contact */}
+                {/* Property Information */}
+                <div className="bg-white rounded-xl shadow">
 
-                <div className="bg-white rounded-xl shadow-md p-6">
+                    <div className="p-6 border-b">
+                        <h2 className="text-xl font-semibold text-gray-900">
+                            Property Information
+                        </h2>
 
-                    <h2 className="text-xl font-semibold mb-6">
-                        Emergency Contact
-                    </h2>
+                        <p className="text-sm text-gray-500 mt-1">
+                            Information about your registered property.
+                        </p>
+                    </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="p-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
                         <div>
-
-                            <p className="text-gray-500 text-sm">
-                                Contact Person
+                            <p className="text-sm text-gray-500">
+                                Community
                             </p>
 
-                            <h3 className="font-semibold">
-                                Rajesh Nair
-                            </h3>
-
+                            <p className="font-medium text-gray-900 mt-1">
+                                Palm Residency
+                            </p>
                         </div>
 
                         <div>
-
-                            <p className="text-gray-500 text-sm">
-                                Relationship
+                            <p className="text-sm text-gray-500">
+                                Apartment / Unit
                             </p>
 
-                            <h3 className="font-semibold">
-                                Spouse
-                            </h3>
-
+                            <p className="font-medium text-gray-900 mt-1">
+                                A-204
+                            </p>
                         </div>
 
                         <div>
-
-                            <p className="text-gray-500 text-sm">
-                                Mobile Number
+                            <p className="text-sm text-gray-500">
+                                Meter ID
                             </p>
 
-                            <h3 className="font-semibold">
-                                +91 99887 66554
-                            </h3>
+                            <p className="font-medium text-gray-900 mt-1">
+                                MTR-88213
+                            </p>
+                        </div>
 
+                        <div>
+                            <p className="text-sm text-gray-500">
+                                Property Type
+                            </p>
+
+                            <p className="font-medium text-gray-900 mt-1">
+                                Apartment
+                            </p>
+                        </div>
+
+                        <div>
+                            <p className="text-sm text-gray-500">
+                                Occupancy
+                            </p>
+
+                            <p className="font-medium text-gray-900 mt-1">
+                                Owner Occupied
+                            </p>
+                        </div>
+
+                        <div>
+                            <p className="text-sm text-gray-500">
+                                Meter Status
+                            </p>
+
+                            <p className="font-medium text-green-600 mt-1">
+                                Active
+                            </p>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                {/* Account Information */}
+                <div className="bg-white rounded-xl shadow">
+
+                    <div className="p-6 border-b">
+                        <h2 className="text-xl font-semibold text-gray-900">
+                            Account Information
+                        </h2>
+                    </div>
+
+                    <div className="p-6 space-y-5">
+
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div>
+                                <p className="font-medium text-gray-900">
+                                    Account Status
+                                </p>
+
+                                <p className="text-sm text-gray-500">
+                                    Your AquaFlow account is currently active.
+                                </p>
+                            </div>
+
+                            <span className="w-fit px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
+                                Active
+                            </span>
+                        </div>
+
+                        <div className="border-t pt-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div>
+                                <p className="font-medium text-gray-900">
+                                    Email Verification
+                                </p>
+
+                                <p className="text-sm text-gray-500">
+                                    Your email address has been verified.
+                                </p>
+                            </div>
+
+                            <span className="w-fit px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-medium">
+                                Verified
+                            </span>
                         </div>
 
                     </div>
@@ -215,7 +244,6 @@ const Profile = () => {
                 </div>
 
             </div>
-
         </DashboardLayout>
     );
 };
