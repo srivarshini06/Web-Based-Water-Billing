@@ -21,7 +21,7 @@ public class WaterReadingController {
     private final WaterReadingService waterReadingService;
 
     @Operation(summary = "Add water reading")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     @PostMapping
     public ResponseEntity<WaterReadingResponse> addReading(
             @Valid @RequestBody WaterReadingRequest request) {

@@ -3,7 +3,6 @@ package com.water.backend.controller;
 import com.water.backend.dto.request.BulkWaterPurchaseRequest;
 import com.water.backend.dto.response.BulkWaterPurchaseResponse;
 import com.water.backend.service.BulkWaterPurchaseService;
-import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,19 +19,20 @@ public class BulkWaterPurchaseController {
 
     private final BulkWaterPurchaseService bulkWaterPurchaseService;
 
-    @Operation(summary = "Create a bulk water purchase")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     public ResponseEntity<BulkWaterPurchaseResponse> createPurchase(
             @Valid @RequestBody BulkWaterPurchaseRequest request) {
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(bulkWaterPurchaseService.createPurchase(request));
+                .body(
+                        bulkWaterPurchaseService.createPurchase(request)
+                );
     }
 
-    @Operation(summary = "Get all bulk water purchases")
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     public ResponseEntity<List<BulkWaterPurchaseResponse>> getAllPurchases() {
 
         return ResponseEntity.ok(
@@ -40,9 +40,10 @@ public class BulkWaterPurchaseController {
         );
     }
 
-    @Operation(summary = "Get bulk water purchases by community")
     @GetMapping("/community/{communityId}")
-    public ResponseEntity<List<BulkWaterPurchaseResponse>> getPurchasesByCommunity(
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN', 'RESIDENT')")
+    public ResponseEntity<List<BulkWaterPurchaseResponse>>
+    getPurchasesByCommunity(
             @PathVariable Long communityId) {
 
         return ResponseEntity.ok(
@@ -51,8 +52,8 @@ public class BulkWaterPurchaseController {
         );
     }
 
-    @Operation(summary = "Get bulk water purchase by ID")
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     public ResponseEntity<BulkWaterPurchaseResponse> getPurchaseById(
             @PathVariable Long id) {
 
@@ -61,28 +62,25 @@ public class BulkWaterPurchaseController {
         );
     }
 
-    @Operation(summary = "Update bulk water purchase")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     public ResponseEntity<BulkWaterPurchaseResponse> updatePurchase(
             @PathVariable Long id,
             @Valid @RequestBody BulkWaterPurchaseRequest request) {
 
         return ResponseEntity.ok(
-                bulkWaterPurchaseService.updatePurchase(id, request)
+                bulkWaterPurchaseService
+                        .updatePurchase(id, request)
         );
     }
 
-    @Operation(summary = "Delete bulk water purchase")
-    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePurchase(
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
+    public ResponseEntity<Void> deletePurchase(
             @PathVariable Long id) {
 
         bulkWaterPurchaseService.deletePurchase(id);
 
-        return ResponseEntity.ok(
-                "Bulk water purchase deleted successfully."
-        );
+        return ResponseEntity.noContent().build();
     }
 }

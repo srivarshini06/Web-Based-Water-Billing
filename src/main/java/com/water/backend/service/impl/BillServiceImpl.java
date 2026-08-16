@@ -15,6 +15,8 @@ import com.water.backend.repository.WaterReadingRepository;
 import com.water.backend.repository.WaterTariffRepository;
 import com.water.backend.service.BillService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -71,10 +73,6 @@ public class BillServiceImpl implements BillService {
 
         /*
          * Get the active tariff for the resident's community.
-         *
-         * This assumes Resident has a Community relationship through:
-         *
-         * resident.getCommunity()
          */
         if (resident.getCommunity() == null) {
             throw new IllegalArgumentException(
@@ -130,12 +128,6 @@ public class BillServiceImpl implements BillService {
 
     /**
      * Calculates the bill progressively across tariff tiers.
-     *
-     * Example:
-     *
-     * Tier 1: 0 - 5000 L  = ₹0.50/L
-     * Tier 2: 5000 - 10000 = ₹0.75/L
-     * Tier 3: 10000+       = ₹1.00/L
      */
     private BigDecimal calculateTieredAmount(
             Double consumption,
@@ -254,6 +246,42 @@ public class BillServiceImpl implements BillService {
                                 "Bill not found"
                         )
                 );
+
+        /*
+         * Get the currently authenticated user's email
+         * from the JWT/Spring Security context.
+         */
+        String currentUserEmail =
+                SecurityContextHolder
+                        .getContext()
+                        .getAuthentication()
+                        .getName();
+
+        /*
+         * Find the resident associated with
+         * the currently logged-in user.
+         */
+        Resident resident =
+                residentRepository
+                        .findByEmail(currentUserEmail)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Resident not found"
+                                )
+                        );
+
+        /*
+         * Make sure the resident can only pay
+         * their own bill.
+         */
+        if (!bill.getResident()
+                .getId()
+                .equals(resident.getId())) {
+
+            throw new AccessDeniedException(
+                    "You can only pay your own bill."
+            );
+        }
 
         if (Boolean.TRUE.equals(bill.getPaid())) {
             throw new IllegalStateException(

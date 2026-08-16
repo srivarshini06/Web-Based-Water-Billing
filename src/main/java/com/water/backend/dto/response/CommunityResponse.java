@@ -29,4 +29,6 @@ public class CommunityResponse {
     private LocalDateTime createdAt;
 
     private LocalDateTime approvedAt;
+
+    private Long adminUserId;
 }

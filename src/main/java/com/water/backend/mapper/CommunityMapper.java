@@ -1,21 +1,9 @@
 package com.water.backend.mapper;
 
-import com.water.backend.dto.request.CommunityRequest;
 import com.water.backend.dto.response.CommunityResponse;
 import com.water.backend.entity.Community;
 
 public class CommunityMapper {
-
-    public static Community toEntity(CommunityRequest request) {
-
-        return Community.builder()
-                .communityName(request.getCommunityName())
-                .ownerName(request.getOwnerName())
-                .email(request.getEmail())
-                .phone(request.getPhone())
-                .address(request.getAddress())
-                .build();
-    }
 
     public static CommunityResponse toResponse(Community community) {
 
@@ -29,6 +17,11 @@ public class CommunityMapper {
                 .status(community.getStatus())
                 .createdAt(community.getCreatedAt())
                 .approvedAt(community.getApprovedAt())
+                .adminUserId(
+                        community.getAdmin() != null
+                                ? community.getAdmin().getUserId()
+                                : null
+                )
                 .build();
     }
 }

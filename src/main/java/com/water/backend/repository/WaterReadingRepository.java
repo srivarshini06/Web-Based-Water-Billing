@@ -1,17 +1,17 @@
 package com.water.backend.repository;
 
-import com.water.backend.entity.Resident;
 import com.water.backend.entity.WaterReading;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
-public interface WaterReadingRepository
-        extends JpaRepository<WaterReading, Long> {
+@Repository
+public interface WaterReadingRepository extends JpaRepository<WaterReading, Long> {
+    // ADD THIS METHOD
+    List<WaterReading> findByConsumerIdAndBillingCycleId(Long consumerId, Long billingCycleId);
 
-    List<WaterReading> findByResident(Resident resident);
+    List<WaterReading> findByConsumerId(Long consumerId);
 
-    Optional<WaterReading>
-    findTopByResidentOrderByReadingDateDesc(Resident resident);
+    List<WaterReading> findByBillingCycleId(Long billingCycleId);
 }

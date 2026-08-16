@@ -21,7 +21,7 @@ public class ConsumerController {
     private final ConsumerService consumerService;
 
     @Operation(summary = "Create consumer")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     @PostMapping
     public ResponseEntity<ConsumerResponse> createConsumer(
             @Valid @RequestBody ConsumerRequest request) {
@@ -49,7 +49,7 @@ public class ConsumerController {
     }
 
     @Operation(summary = "Update consumer")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<ConsumerResponse> updateConsumer(
             @PathVariable Long id,
@@ -60,7 +60,7 @@ public class ConsumerController {
     }
 
     @Operation(summary = "Delete consumer")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteConsumer(
             @PathVariable Long id) {

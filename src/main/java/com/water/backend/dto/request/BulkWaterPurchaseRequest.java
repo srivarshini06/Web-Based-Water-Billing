@@ -1,29 +1,23 @@
 package com.water.backend.dto.request;
 
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-import java.time.LocalDate;
-
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class BulkWaterPurchaseRequest {
-
-    @NotNull(message = "Community ID is required")
     private Long communityId;
-
-    @NotNull(message = "Quantity in litres is required")
-    @Positive(message = "Quantity must be greater than zero")
-    private Double quantityLitres;
-
-    @NotNull(message = "Total cost is required")
-    @Positive(message = "Total cost must be greater than zero")
-    private Double totalCost;
-
-    @NotNull(message = "Purchase date is required")
-    private LocalDate purchaseDate;
+    private Long billingCycleId;
+    private Long quantityLitres;
+    private BigDecimal pricePerLitre;
+    private LocalDateTime purchaseDate;
+    private LocalDateTime deliveryDate;
+    private String source;
+    private String supplierName;
+    private String invoiceNumber;
+    private String remarks;
 }

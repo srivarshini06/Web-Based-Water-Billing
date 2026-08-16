@@ -6,6 +6,9 @@ import com.water.backend.entity.User;
 
 public class UserMapper {
 
+    private UserMapper() {
+    }
+
     public static User toEntity(UserRequest request) {
 
         return User.builder()
@@ -13,11 +16,16 @@ public class UserMapper {
                 .email(request.getEmail())
                 .phoneNumber(request.getPhoneNumber())
                 .password(request.getPassword())
-                .role(request.getRole())
                 .build();
     }
 
     public static UserResponse toResponse(User user) {
+
+        Long communityId = null;
+
+        if (user.getCommunity() != null) {
+            communityId = user.getCommunity().getId();
+        }
 
         return UserResponse.builder()
                 .userId(user.getUserId())
@@ -25,6 +33,8 @@ public class UserMapper {
                 .email(user.getEmail())
                 .phoneNumber(user.getPhoneNumber())
                 .role(user.getRole())
+                .status(user.getStatus())
+                .communityId(communityId)
                 .build();
     }
 }

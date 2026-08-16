@@ -5,9 +5,16 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "communities")
+@Table(
+        name = "communities",
+        uniqueConstraints = {
+                @UniqueConstraint(name = "uk_communities_email", columnNames = "email"),
+                @UniqueConstraint(name = "uk_communities_admin", columnNames = "admin_user_id")
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,6 +48,20 @@ public class Community {
     private LocalDateTime createdAt;
 
     private LocalDateTime approvedAt;
+
+    /*
+     * One Community Admin -> One Community
+     *
+     * unique = true guarantees that one user cannot own
+     * multiple communities.
+     */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "admin_user_id",
+            unique = true
+    )
+    private User admin;
+
     @OneToMany(mappedBy = "community")
-    private java.util.List<WaterTariff> tariffs;
+    private List<WaterTariff> tariffs;
 }

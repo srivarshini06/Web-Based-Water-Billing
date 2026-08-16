@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "water_tariffs")
@@ -18,11 +20,14 @@ public class WaterTariff {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // Community to which this tariff belongs
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "community_id", nullable = false)
     private Community community;
 
+    /*
+     * Kept for backward compatibility.
+     * Tiered billing will use TariffTier.pricePerLitre.
+     */
     @Column(nullable = false)
     private Double pricePerLitre;
 
@@ -31,4 +36,13 @@ public class WaterTariff {
 
     @Column(nullable = false)
     private Boolean active;
+
+    @Builder.Default
+    @OneToMany(
+            mappedBy = "tariff",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @OrderBy("minLitres ASC")
+    private List<TariffTier> tiers = new ArrayList<>();
 }

@@ -21,7 +21,7 @@ public class WaterTariffController {
     private final WaterTariffService waterTariffService;
 
     @Operation(summary = "Create a new water tariff")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     @PostMapping
     public ResponseEntity<WaterTariffResponse> createTariff(
             @Valid @RequestBody WaterTariffRequest request) {
@@ -32,44 +32,51 @@ public class WaterTariffController {
     }
 
     @Operation(summary = "Get all tariffs")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     @GetMapping
     public ResponseEntity<List<WaterTariffResponse>> getAllTariffs() {
 
         return ResponseEntity.ok(
-                waterTariffService.getAllTariffs());
+                waterTariffService.getAllTariffs()
+        );
     }
 
     @Operation(summary = "Get tariffs by community")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN', 'RESIDENT')")
     @GetMapping("/community/{communityId}")
     public ResponseEntity<List<WaterTariffResponse>> getTariffsByCommunity(
             @PathVariable Long communityId) {
 
         return ResponseEntity.ok(
-                waterTariffService.getTariffsByCommunity(communityId));
+                waterTariffService.getTariffsByCommunity(communityId)
+        );
     }
 
     @Operation(summary = "Get active tariff of a community")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN', 'RESIDENT')")
     @GetMapping("/community/{communityId}/active")
     public ResponseEntity<WaterTariffResponse> getActiveTariff(
             @PathVariable Long communityId) {
 
         return ResponseEntity.ok(
-                waterTariffService.getActiveTariff(communityId));
+                waterTariffService.getActiveTariff(communityId)
+        );
     }
 
     @Operation(summary = "Update water tariff")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<WaterTariffResponse> updateTariff(
             @PathVariable Long id,
             @Valid @RequestBody WaterTariffRequest request) {
 
         return ResponseEntity.ok(
-                waterTariffService.updateTariff(id, request));
+                waterTariffService.updateTariff(id, request)
+        );
     }
 
     @Operation(summary = "Delete water tariff")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTariff(
             @PathVariable Long id) {

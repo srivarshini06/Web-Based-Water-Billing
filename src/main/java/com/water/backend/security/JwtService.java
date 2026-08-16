@@ -23,37 +23,61 @@ public class JwtService {
     @Value("${jwt.expiration}")
     private long expiration;
 
-    // 🔥 UPDATED: include role
-    public String generateToken(String email, String role) {
+    public String generateToken(
+            String email,
+            String role) {
 
-        Map<String, Object> claims = new HashMap<>();
+        Map<String, Object> claims =
+                new HashMap<>();
+
         claims.put("role", role);
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(email)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .setExpiration(
+                        new Date(
+                                System.currentTimeMillis()
+                                        + expiration
+                        )
+                )
+                .signWith(
+                        getSigningKey(),
+                        SignatureAlgorithm.HS256
+                )
                 .compact();
     }
 
     public String extractUsername(String token) {
-        return extractClaim(token, Claims::getSubject);
+
+        return extractClaim(
+                token,
+                Claims::getSubject
+        );
     }
 
     public String extractRole(String token) {
-        return extractAllClaims(token).get("role", String.class);
+
+        return extractAllClaims(token)
+                .get("role", String.class);
     }
 
     public Date extractExpiration(String token) {
-        return extractClaim(token, Claims::getExpiration);
+
+        return extractClaim(
+                token,
+                Claims::getExpiration
+        );
     }
 
-    public <T> T extractClaim(String token,
-                              Function<Claims, T> resolver) {
+    public <T> T extractClaim(
+            String token,
+            Function<Claims, T> resolver) {
 
-        final Claims claims = extractAllClaims(token);
+        final Claims claims =
+                extractAllClaims(token);
+
         return resolver.apply(claims);
     }
 
@@ -68,13 +92,19 @@ public class JwtService {
 
     private Key getSigningKey() {
 
-        byte[] keyBytes = Decoders.BASE64.decode(secret);
+        byte[] keyBytes =
+                Decoders.BASE64.decode(secret);
+
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public boolean isTokenValid(String token, String email) {
+    public boolean isTokenValid(
+            String token,
+            String email) {
 
-        return extractUsername(token).equals(email)
-                && !extractExpiration(token).before(new Date());
+        return extractUsername(token)
+                .equals(email)
+                && !extractExpiration(token)
+                .before(new Date());
     }
 }

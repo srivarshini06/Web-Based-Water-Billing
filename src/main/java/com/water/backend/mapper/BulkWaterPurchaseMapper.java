@@ -1,40 +1,31 @@
 package com.water.backend.mapper;
 
-import com.water.backend.dto.request.BulkWaterPurchaseRequest;
 import com.water.backend.dto.response.BulkWaterPurchaseResponse;
 import com.water.backend.entity.BulkWaterPurchase;
-import com.water.backend.entity.Community;
+import org.springframework.stereotype.Component;
 
+@Component
 public class BulkWaterPurchaseMapper {
 
-    private BulkWaterPurchaseMapper() {
-        // Utility class
-    }
-
-    public static BulkWaterPurchase toEntity(
-            BulkWaterPurchaseRequest request,
-            Community community) {
-
-        return BulkWaterPurchase.builder()
-                .community(community)
-                .quantityLitres(request.getQuantityLitres())
-                .totalCost(request.getTotalCost())
-                .purchaseDate(request.getPurchaseDate())
-                .active(true)
-                .build();
-    }
-
-    public static BulkWaterPurchaseResponse toResponse(
-            BulkWaterPurchase purchase) {
+    public BulkWaterPurchaseResponse toResponse(BulkWaterPurchase purchase) {
+        if (purchase == null) {
+            return null;
+        }
 
         return BulkWaterPurchaseResponse.builder()
                 .id(purchase.getId())
-                .communityId(purchase.getCommunity().getId())
-                .communityName(purchase.getCommunity().getCommunityName())
+                .communityId(purchase.getCommunityId())
+                .communityName(purchase.getCommunity() != null ? purchase.getCommunity().getCommunityName() : "")
+                .billingCycleId(purchase.getBillingCycle() != null ? purchase.getBillingCycle().getId() : null)
                 .quantityLitres(purchase.getQuantityLitres())
+                .pricePerLitre(purchase.getPricePerLitre())
                 .totalCost(purchase.getTotalCost())
                 .purchaseDate(purchase.getPurchaseDate())
-                .active(purchase.getActive())
+                .deliveryDate(purchase.getDeliveryDate())
+                .source(purchase.getSource())
+                .supplierName(purchase.getSupplierName())
+                .invoiceNumber(purchase.getInvoiceNumber())
+                .remarks(purchase.getRemarks())
                 .build();
     }
 }

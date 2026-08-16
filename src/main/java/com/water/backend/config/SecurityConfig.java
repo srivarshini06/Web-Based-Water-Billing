@@ -20,20 +20,30 @@ public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http)
+            throws Exception {
 
         http
                 .csrf(csrf -> csrf.disable())
 
-                .cors(cors -> {}) // Swagger support
+                .cors(cors -> {
+                })
 
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                        session.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS
+                        )
                 )
 
                 .authorizeHttpRequests(auth -> auth
 
-                        // ✅ PUBLIC (Swagger + Auth)
+                        /*
+                         * ==========================================
+                         * PUBLIC ENDPOINTS
+                         * ==========================================
+                         */
+
                         .requestMatchers(
                                 "/v3/api-docs/**",
                                 "/swagger-ui/**",
@@ -41,24 +51,103 @@ public class SecurityConfig {
                                 "/swagger-resources/**",
                                 "/webjars/**",
                                 "/api/users/register",
-                                "/api/users/login"
+                                "/api/users/login",
+                                "/api/communities/register"
                         ).permitAll()
 
-                        // 🔥 SUPERADMIN ONLY
-                        .requestMatchers("/api/superadmin/**")
-                        .hasAuthority("SUPERADMIN")
+                        /*
+                         * ==========================================
+                         * SUPERADMIN
+                         * ==========================================
+                         */
 
-                        // 🔥 COMMUNITY ADMIN (and above)
-                        .requestMatchers("/api/community/**")
-                        .hasAnyAuthority("SUPERADMIN", "COMMUNITY_ADMIN")
+                        .requestMatchers(
+                                "/api/admin/**"
+                        ).hasAuthority("SUPERADMIN")
 
-                        // 🔥 RESIDENT (all roles)
-                        .requestMatchers("/api/resident/**")
-                        .hasAnyAuthority("SUPERADMIN", "COMMUNITY_ADMIN", "RESIDENT")
+                        /*
+                         * ==========================================
+                         * COMMUNITY ENDPOINTS
+                         * ==========================================
+                         */
 
-                        // 🔐 everything else secured
+                        .requestMatchers(
+                                "/api/communities/**"
+                        ).hasAnyAuthority(
+                                "SUPERADMIN",
+                                "COMMUNITY_ADMIN"
+                        )
+
+                        /*
+                         * ==========================================
+                         * RESIDENT ENDPOINTS
+                         * ==========================================
+                         */
+
+                        .requestMatchers(
+                                "/api/residents/**"
+                        ).hasAnyAuthority(
+                                "SUPERADMIN",
+                                "COMMUNITY_ADMIN"
+                        )
+
+                        /*
+                         * ==========================================
+                         * FUTURE COMMUNITY APIs
+                         * ==========================================
+                         */
+
+                        .requestMatchers(
+                                "/api/community/**"
+                        ).hasAnyAuthority(
+                                "SUPERADMIN",
+                                "COMMUNITY_ADMIN"
+                        )
+
+                        /*
+                         * ==========================================
+                         * FUTURE RESIDENT APIs
+                         * ==========================================
+                         */
+
+                        .requestMatchers(
+                                "/api/resident/**"
+                        ).hasAnyAuthority(
+                                "SUPERADMIN",
+                                "COMMUNITY_ADMIN",
+                                "RESIDENT"
+                        )
+
+                        /*
+                         * ==========================================
+                         * PROCUREMENT COST
+                         * ==========================================
+                         *
+                         * Community procurement cost is accessible
+                         * to Super Admin and Community Admin.
+                         */
+
+                        .requestMatchers(
+                                "/api/procurement-cost/**"
+                        ).hasAnyAuthority(
+                                "SUPERADMIN",
+                                "COMMUNITY_ADMIN"
+                        )
+
+                        /*
+                         * ==========================================
+                         * EVERYTHING ELSE
+                         * ==========================================
+                         */
+
                         .anyRequest().authenticated()
                 )
+
+                /*
+                 * ==========================================
+                 * JWT FILTER
+                 * ==========================================
+                 */
 
                 .addFilterBefore(
                         jwtAuthenticationFilter,
@@ -70,7 +159,9 @@ public class SecurityConfig {
 
     @Bean
     public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration configuration) throws Exception {
+            AuthenticationConfiguration configuration)
+            throws Exception {
+
         return configuration.getAuthenticationManager();
     }
 }

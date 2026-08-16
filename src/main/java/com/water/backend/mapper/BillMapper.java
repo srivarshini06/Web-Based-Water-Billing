@@ -2,24 +2,22 @@ package com.water.backend.mapper;
 
 import com.water.backend.dto.response.BillResponse;
 import com.water.backend.entity.Bill;
+import org.springframework.stereotype.Component;
 
-public final class BillMapper {
+@Component
+public class BillMapper {
 
-    private BillMapper() {
-        // Utility class
-    }
-
-    public static BillResponse toResponse(Bill bill) {
+    public BillResponse toResponse(Bill bill) {
+        if (bill == null) {
+            return null;
+        }
 
         return BillResponse.builder()
                 .id(bill.getId())
-                .residentId(bill.getResident().getId())
-                .residentName(bill.getResident().getFullName())
                 .consumption(bill.getConsumption())
                 .amount(bill.getAmount())
                 .billMonth(bill.getBillMonth())
                 .paid(bill.getPaid())
-                .paidDate(bill.getPaidDate())
                 .build();
     }
 }

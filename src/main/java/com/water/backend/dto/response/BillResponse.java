@@ -4,28 +4,16 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
+import java.math.BigDecimal;
 
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BillResponse {
-
     private Long id;
-
-    private Long residentId;
-
-    private String residentName;
-
-    private Double consumption;
-
-    private Double amount;
-
-    private LocalDate billMonth;
-
+    private BigDecimal consumption;
+    private BigDecimal amount;
+    private String billMonth;
     private Boolean paid;
-
-    private LocalDate paidDate;
 }

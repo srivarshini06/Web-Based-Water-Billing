@@ -1,14 +1,16 @@
 package com.water.backend.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.time.LocalDate;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "bulk_water_purchases")
-@Getter
-@Setter
+@Table(name = "bulk_water_purchase")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
@@ -18,24 +20,79 @@ public class BulkWaterPurchase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "community_id", nullable = false)
+    private Long communityId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "community_id", nullable = false)
+    @JoinColumn(name = "community_fk")
     private Community community;
 
-    @Column(nullable = false)
-    private Double quantityLitres;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "billing_cycle_id")
+    private BillingCycle billingCycle;
 
-    @Column(nullable = false)
-    private Double totalCost;
+    @Column(name = "quantity_litres", nullable = false)  // in litres
+    private Long quantityLitres;
 
-    @Column(nullable = false)
-    private LocalDate purchaseDate;
+    @Column(name = "price_per_litre", nullable = false)  // rate per litre
+    private BigDecimal pricePerLitre;
 
-    private String supplier;
+    @Column(name = "total_cost", nullable = false)  // quantityLitres * pricePerLitre
+    private BigDecimal totalCost;
 
-    private String referenceNumber;
+    @Column(name = "purchase_date")
+    private LocalDateTime purchaseDate;
 
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean active = true;
+    @Column(name = "delivery_date")
+    private LocalDateTime deliveryDate;
+
+    @Column(name = "source")  // e.g., "TANKER", "MUNICIPAL", "BOREWELL"
+    private String source;
+
+    @Column(name = "supplier_name")
+    private String supplierName;
+
+    @Column(name = "invoice_number")
+    private String invoiceNumber;
+
+    @Column(name = "remarks", columnDefinition = "TEXT")
+    private String remarks;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+        // Calculate total cost
+        if (quantityLitres != null && pricePerLitre != null) {
+            totalCost = pricePerLitre.multiply(new BigDecimal(quantityLitres));
+        }
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
+
+    // Getters (Lombok @Data generates these, but explicit for clarity)
+    public Long getId() { return id; }
+    public Long getCommunityId() { return communityId; }
+    public Community getCommunity() { return community; }
+    public BillingCycle getBillingCycle() { return billingCycle; }
+    public Long getQuantityLitres() { return quantityLitres; }
+    public BigDecimal getPricePerLitre() { return pricePerLitre; }
+    public BigDecimal getTotalCost() { return totalCost; }
+    public LocalDateTime getPurchaseDate() { return purchaseDate; }
+    public LocalDateTime getDeliveryDate() { return deliveryDate; }
+    public String getSource() { return source; }
+    public String getSupplierName() { return supplierName; }
+    public String getInvoiceNumber() { return invoiceNumber; }
+    public String getRemarks() { return remarks; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
 }

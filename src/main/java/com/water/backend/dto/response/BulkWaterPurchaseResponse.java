@@ -1,27 +1,28 @@
 package com.water.backend.dto.response;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-import java.time.LocalDate;
-
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class BulkWaterPurchaseResponse {
-
     private Long id;
-
     private Long communityId;
-
     private String communityName;
-
-    private Double quantityLitres;
-
-    private Double totalCost;
-
-    private LocalDate purchaseDate;
-
-    private Boolean active;
+    private Long billingCycleId;
+    private Long quantityLitres;
+    private BigDecimal pricePerLitre;
+    private BigDecimal totalCost;
+    private LocalDateTime purchaseDate;
+    private LocalDateTime deliveryDate;
+    private String source;
+    private String supplierName;
+    private String invoiceNumber;
+    private String remarks;
 }

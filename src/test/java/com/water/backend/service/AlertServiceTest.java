@@ -1,0 +1,4 @@
+package com.water.backend.service;
+
+import com.water.backend.entity.*; import com.water.backend.repository.*; import com.water.backend.service.impl.AlertServiceImpl; import org.junit.jupiter.api.Test; import org.junit.jupiter.api.extension.ExtendWith; import org.mockito.*; import org.mockito.junit.jupiter.MockitoExtension; import java.util.*; import static org.mockito.Mockito.*;
+@ExtendWith(MockitoExtension.class) class AlertServiceTest { @Mock ResidentRepository residentRepo; @Mock WaterReadingRepository readingRepo; @Mock WaterUsageAlertRepository alertRepo; @InjectMocks AlertServiceImpl service; @Test void noAlertWhenThereAreNoReadings(){when(residentRepo.findAll()).thenReturn(List.of(Resident.builder().id(1L).build())); when(readingRepo.findByResident(any())).thenReturn(List.of()); service.detectThresholdViolations(); verify(alertRepo,never()).save(any());}}

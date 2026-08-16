@@ -1,6 +1,5 @@
 package com.water.backend.dto.request;
 
-import com.water.backend.enums.UserRole;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -16,6 +15,7 @@ public class UserRequest {
     private String fullName;
 
     @Email(message = "Invalid email")
+    @NotBlank(message = "Email is required")
     private String email;
 
     @NotBlank(message = "Phone number is required")
@@ -23,6 +23,4 @@ public class UserRequest {
 
     @NotBlank(message = "Password is required")
     private String password;
-
-    private UserRole role;
 }

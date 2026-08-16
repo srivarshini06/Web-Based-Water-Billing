@@ -32,7 +32,7 @@ public class ComplaintController {
 
     @Operation(summary = "Get all complaints")
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('ADMIN','CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     public ResponseEntity<List<ComplaintResponse>> getAllComplaints() {
 
         return ResponseEntity.ok(
@@ -41,7 +41,7 @@ public class ComplaintController {
 
     @Operation(summary = "Get complaint by ID")
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     public ResponseEntity<ComplaintResponse> getComplaintById(
             @PathVariable Long id) {
 
@@ -51,7 +51,7 @@ public class ComplaintController {
 
     @Operation(summary = "Get complaints of a resident")
     @GetMapping("/resident/{residentId}")
-    @PreAuthorize("hasAnyAuthority('ADMIN','CUSTOMER')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     public ResponseEntity<List<ComplaintResponse>> getComplaintsByResident(
             @PathVariable Long residentId) {
 
@@ -61,7 +61,7 @@ public class ComplaintController {
 
     @Operation(summary = "Get complaints by status")
     @GetMapping("/status/{status}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     public ResponseEntity<List<ComplaintResponse>> getComplaintsByStatus(
             @PathVariable ComplaintStatus status) {
 
@@ -70,7 +70,7 @@ public class ComplaintController {
     }
 
     @Operation(summary = "Update complaint status")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('SUPERADMIN', 'COMMUNITY_ADMIN')")
     @PutMapping("/{id}/status")
     public ResponseEntity<ComplaintResponse> updateStatus(
             @PathVariable Long id,

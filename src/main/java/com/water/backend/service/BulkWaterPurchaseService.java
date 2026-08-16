@@ -8,18 +8,25 @@ import java.util.List;
 public interface BulkWaterPurchaseService {
 
     BulkWaterPurchaseResponse createPurchase(
-            BulkWaterPurchaseRequest request);
+            BulkWaterPurchaseRequest request
+    );
 
     List<BulkWaterPurchaseResponse> getAllPurchases();
 
     List<BulkWaterPurchaseResponse> getPurchasesByCommunity(
-            Long communityId);
+            Long communityId
+    );
 
-    BulkWaterPurchaseResponse getPurchaseById(Long id);
+    BulkWaterPurchaseResponse getPurchaseById(
+            Long id
+    );
 
     BulkWaterPurchaseResponse updatePurchase(
             Long id,
-            BulkWaterPurchaseRequest request);
+            BulkWaterPurchaseRequest request
+    );
 
-    void deletePurchase(Long id);
+    void deletePurchase(
+            Long id
+    );
 }
